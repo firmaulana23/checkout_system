@@ -1,0 +1,29 @@
+<h1>New Payment</h1>
+
+<%= form_with(model: @order, url: payments_path, local: true) do |form| %>
+  <% if @order.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@order.errors.count, "error") %> prohibited this order from being saved:</h2>
+
+      <ul>
+        <% @order.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :amount %>
+    <%= form.number_field :amount, step: 0.01 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :payment_method %>
+    <%= form.select :payment_method, options_for_select([['Credit Card', 'credit_card'], ['Bank Transfer', 'bank_transfer']]) %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Process Payment" %>
+  </div>
+<% end %>

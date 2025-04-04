@@ -1,0 +1,26 @@
+<div class="container mx-auto p-6">
+  <h2 class="text-2xl font-bold mb-4">Daftar Menu</h2>
+  <a href="<%= new_menu_path %>" class="bg-blue-500 text-white p-2 rounded">Tambah Menu</a>
+
+  <table class="w-full border mt-4">
+    <thead>
+      <tr class="bg-gray-200">
+        <th class="p-2 border">Nama</th>
+        <th class="p-2 border">Harga</th>
+        <th class="p-2 border">Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @menus.each do |menu| %>
+        <tr class="text-center">
+          <td class="p-2 border"><%= menu.name %></td>
+          <td class="p-2 border">Rp <%= number_to_currency(menu.price, unit: '', delimiter: '.') %></td>
+          <td class="p-2 border">
+            <a href="<%= edit_menu_path(menu) %>" class="bg-yellow-500 text-white p-1 rounded">Edit</a>
+            <%= button_to "Hapus", menu, method: :delete, class: "bg-red-500 text-white p-1 rounded", data: { confirm: "Yakin ingin menghapus?" } %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

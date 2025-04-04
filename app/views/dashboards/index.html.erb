@@ -1,0 +1,92 @@
+<div style="display: flex; flex-wrap: wrap;">
+  <!-- Main menu container -->
+  <div class="menu-container" style="flex: 3; display: flex; flex-wrap: wrap; gap: 16px;">
+    <% @menu_items.each do |menu| %>
+      <div class="menu-item" style="border: 1px solid #ccc; padding: 16px; border-radius: 8px; flex: 1 1 calc(50% - 16px); box-sizing: border-box;">
+        <h3><%= menu.name %></h3>
+        <p><strong>Price:</strong> <%= number_to_currency(menu.price) %></p>
+        <button onclick="addToInvoice('<%= menu.id %>', '<%= menu.name %>', <%= menu.price %>)">Add to Invoice</button>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Sidebar for invoice -->
+  <div class="invoice-sidebar" style="flex: 1; border-left: 1px solid #ccc; padding: 16px; min-width: 300px;">
+    <h3>Invoice</h3>
+    <ul id="invoice-list" style="list-style: none; padding: 0;">
+      <!-- Items will be dynamically added here -->
+    </ul>
+    <p><strong>Total:</strong> $<span id="invoice-total">0.00</span></p>
+  </div>
+</div>
+
+<style>
+  @media (max-width: 768px) {
+    .menu-container {
+      flex: 1 1 100%;
+    }
+
+    .menu-item {
+      flex: 1 1 calc(100% - 16px);
+    }
+
+    .invoice-sidebar {
+      flex: 1 1 100%;
+      border-left: none;
+      border-top: 1px solid #ccc;
+      margin-top: 16px;
+    }
+  }
+</style>
+
+<script>
+  let invoice = [];
+  let total = 0;
+
+  function addToInvoice(id, name, price) {
+    const existingItem = invoice.find(item => item.id === id);
+
+    if (existingItem) {
+      existingItem.quantity += 1;
+      existingItem.totalPrice += price;
+    } else {
+      invoice.push({ id, name, price, quantity: 1, totalPrice: price });
+    }
+
+    updateInvoiceUI();
+  }
+
+  function updateInvoiceUI() {
+    const invoiceList = document.getElementById('invoice-list');
+    const totalElement = document.getElementById('invoice-total');
+
+    // Clear the invoice list
+    invoiceList.innerHTML = '';
+    total = 0;
+
+    // Render updated invoice items
+    invoice.forEach(item => {
+      const listItem = document.createElement('li');
+      listItem.innerHTML = `
+        ${item.name} - $${item.price.toFixed(2)} x 
+        <input type="number" value="${item.quantity}" min="1" style="width: 50px;" onchange="updateQuantity('${item.id}', this.value)">
+        = $${item.totalPrice.toFixed(2)}
+      `;
+      invoiceList.appendChild(listItem);
+      total += item.totalPrice;
+    });
+
+    // Update total
+    totalElement.textContent = total.toFixed(2);
+  }
+
+  function updateQuantity(id, quantity) {
+    const item = invoice.find(item => item.id === id);
+    if (item) {
+      const newQuantity = parseInt(quantity, 10) || 1;
+      item.quantity = newQuantity;
+      item.totalPrice = item.price * newQuantity;
+      updateInvoiceUI();
+    }
+  }
+</script>

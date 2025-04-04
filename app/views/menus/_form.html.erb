@@ -1,0 +1,13 @@
+<%= form_with(model: @menu, local: true, class: "space-y-4") do |f| %>
+  <div>
+    <%= f.label :name, "Nama Menu", class: "block font-bold" %>
+    <%= f.text_field :name, class: "w-full p-2 border rounded" %>
+  </div>
+
+  <div>
+    <%= f.label :price, "Harga", class: "block font-bold" %>
+    <%= f.number_field :price, class: "w-full p-2 border rounded", min: 0 %>
+  </div>
+
+  <%= f.submit "Simpan", class: "bg-green-500 text-white p-2 rounded" %>
+<% end %>

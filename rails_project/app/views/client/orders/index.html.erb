@@ -1,0 +1,30 @@
+<h1>Order List</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Order ID</th>
+      <th>User</th>
+      <th>Total Amount</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @orders.each do |order| %>
+      <tr>
+        <td><%= order.id %></td>
+        <td><%= order.user.name %></td>
+        <td><%= number_to_currency(order.total_amount) %></td>
+        <td><%= order.status %></td>
+        <td>
+          <%= link_to 'View', order_path(order) %>
+          <%= link_to 'Edit', edit_order_path(order) %>
+          <%= link_to 'Delete', order_path(order), method: :delete, data: { confirm: 'Are you sure?' } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to 'New Order', new_order_path %>
