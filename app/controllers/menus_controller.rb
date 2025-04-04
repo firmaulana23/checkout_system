@@ -19,6 +19,7 @@ class MenusController < ApplicationController
   end
 
   def edit
+    flash[:notice] = "Anda sedang mengedit menu."
   end
 
   def update
@@ -41,6 +42,6 @@ class MenusController < ApplicationController
   end
 
   def menu_params
-    params.require(:menu).permit(:name, :price)
+    params.require(:menu).permit(:name, :price, :category)
   end
 end

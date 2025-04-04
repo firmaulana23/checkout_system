@@ -9,5 +9,10 @@
     <%= f.number_field :price, class: "w-full p-2 border rounded", min: 0 %>
   </div>
 
+  <div>
+    <%= f.label :category, "Kategori", class: "block font-bold" %>
+    <%= f.select :category, ["Coffee", "Signature", "Non-Coffee", "Food", "Manual"], {}, class: "w-full p-2 border rounded" %>
+  </div>
+
   <%= f.submit "Simpan", class: "bg-green-500 text-white p-2 rounded" %>
 <% end %>

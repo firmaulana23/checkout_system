@@ -1,12 +1,33 @@
 <div style="display: flex; flex-wrap: wrap;">
+  <!-- Search bar -->
+  <div style="width: 100%; margin-bottom: 16px;">
+    <input type="text" id="menu-search" placeholder="Search menu..." 
+           style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" 
+           oninput="filterMenu()">
+  </div>
+
+  <!-- Category filter -->
+  <div style="width: 100%; margin-bottom: 16px;">
+    <select id="menu-category" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" onchange="filterMenu()">
+      <option value="">All Categories</option>
+      <% @menu_items.map(&:category).uniq.each do |category| %>
+        <option value="<%= category.to_s.downcase %>"><%= category %></option>
+      <% end %>
+    </select>
+  </div>
+
   <!-- Main menu container -->
   <div class="menu-container" style="flex: 3; display: flex; flex-wrap: wrap; gap: 16px;">
     <% @menu_items.each do |menu| %>
-      <div class="menu-item" style="border: 1px solid #ccc; padding: 16px; border-radius: 8px; flex: 1 1 calc(50% - 16px); box-sizing: border-box;">
+      <button class="menu-item" 
+           style="border: 1px solid #ccc; padding: 16px; border-radius: 8px; flex: 1 1 calc(50% - 16px); box-sizing: border-box; cursor: pointer;" 
+           data-name="<%= menu.name.downcase %>" 
+           data-category="<%= menu.category.to_s.downcase if menu.category %>"
+           onclick="addToInvoice('<%= menu.id %>', '<%= menu.name %>', <%= menu.price %>)">
         <h3><%= menu.name %></h3>
         <p><strong>Price:</strong> <%= number_to_currency(menu.price) %></p>
-        <button onclick="addToInvoice('<%= menu.id %>', '<%= menu.name %>', <%= menu.price %>)">Add to Invoice</button>
-      </div>
+        
+      </button>
     <% end %>
   </div>
 
@@ -88,5 +109,21 @@
       item.totalPrice = item.price * newQuantity;
       updateInvoiceUI();
     }
+  }
+
+  function filterMenu() {
+    const searchValue = document.getElementById('menu-search').value.toLowerCase();
+    const categoryValue = document.getElementById('menu-category').value.toLowerCase();
+    const menuItems = document.querySelectorAll('.menu-item');
+
+    menuItems.forEach(item => {
+      const name = item.getAttribute('data-name');
+      const category = item.getAttribute('data-category');
+      if ((name.includes(searchValue)) && (categoryValue === '' || category === categoryValue)) {
+        item.style.display = 'block';
+      } else {
+        item.style.display = 'none';
+      }
+    });
   }
 </script>
